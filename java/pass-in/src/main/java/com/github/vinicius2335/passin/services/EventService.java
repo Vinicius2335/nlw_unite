@@ -5,7 +5,6 @@ import com.github.vinicius2335.passin.domain.event.exceptions.EventNotFoundExcep
 import com.github.vinicius2335.passin.dto.event.EventIdDTO;
 import com.github.vinicius2335.passin.dto.event.EventRequestDTO;
 import com.github.vinicius2335.passin.dto.event.EventResponseDTO;
-import com.github.vinicius2335.passin.repositories.AttendeeRepository;
 import com.github.vinicius2335.passin.repositories.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EventService {
     private final EventRepository eventRepository;
-    private final AttendeeRepository attendeeRepository;
+    private final AttendeeService attendeeService;
 
     /**
      * Listagem de eventos
@@ -37,7 +36,7 @@ public class EventService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException("Event not found with ID: " + eventId));
 
-        int numberOfAttendees = attendeeRepository.findByEventId(eventId).size();
+        int numberOfAttendees = attendeeService.getAllAttendeesFromEvent(eventId).size();
         return new EventResponseDTO(event, numberOfAttendees);
     }
 
@@ -69,7 +68,7 @@ public class EventService {
     private String createSlug(String text){
         String normalized = Normalizer.normalize(text, Normalizer.Form.NFD);
         return normalized
-                .replaceAll("[\\p{InCOMBINING_DIACRITICAL_MARKS}]", "") // remove os acentos
+                .replaceAll("\\p{InCOMBINING_DIACRITICAL_MARKS}", "") // remove os acentos
                 .replaceAll("[^\\w\\s]", "") // remove tudo que não for letra ou número
                 .replaceAll("\\s+", "-") // troca espaço em branco por hífen
                 .toLowerCase();
