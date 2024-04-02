@@ -22,16 +22,16 @@ public class AttendeeService {
     /**
      * Retorna todos os participantes  relacionado a um evento
      * @param eventId identificador do evento
-     * @return lista de todos os participantes de um evento
+     * @return lista da entidade de todos os participantes de um evento
      */
     public List<Attendee> getAllAttendeesFromEvent(String eventId){
         return attendeeRepository.findByEventId(eventId);
     }
 
     /**
-     * Retorna todos os participantes que realizaram o checkin de um determinado evento
+     * Retorna todos os participantes um determinado evento
      * @param eventId identificador do evento
-     * @return lista de todos os participantes que realizaram o checkin
+     * @return lista com o DTO de todos os participantes
      */
     public AttendeesListResponseDTO getEventsAttendee(String eventId){
         List<Attendee> attendeeList = getAllAttendeesFromEvent(eventId);
