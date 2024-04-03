@@ -36,7 +36,7 @@ public class EventService {
      * Procura um evento pelo seu identificador
      * @param eventId Identificador do evento
      * @return evento
-     * @throws EventNotFoundException quando evento não for encontrado pelo id fornecido
+     * @throws EventNotFoundException quando evento não for encontrado pelo attendeeId fornecido
      */
     public Event getEventByIdOrThrowsException(String eventId){
         return eventRepository.findById(eventId)
@@ -45,9 +45,9 @@ public class EventService {
 
     /**
      *  Visualizar dados de um evento
-     * @param eventId id do evento que o usuário deseja visualizar
+     * @param eventId attendeeId do evento que o usuário deseja visualizar
      * @return detalhes do evento
-     * @throws EventNotFoundException quando evento não for encontrado pelo id fornecido
+     * @throws EventNotFoundException quando evento não for encontrado pelo attendeeId fornecido
      */
     public EventResponseDTO getEventDetail(String eventId){
         Event event = getEventByIdOrThrowsException(eventId);
@@ -59,7 +59,7 @@ public class EventService {
     /**
      * Cadastra um novo evento
      * @param request apresenta informações necessárias para a criação de um novo evento
-     * @return id do evento criado
+     * @return attendeeId do evento criado
      */
     @Transactional
     public EventIdDTO createEvent(EventRequestDTO request){
@@ -94,9 +94,9 @@ public class EventService {
      * Registra um participante no evento
      * @param eventId Identificador do evento
      * @param request Representa p novo participante a ser registrado no evento
-     * @return id do participante registrado
+     * @return attendeeId do participante registrado
      * @throws AttendeeAlreadyExistException quando o participante já esta registrado no evento
-     * @throws EventNotFoundException quando o id do evento fornecido não foi encontrado no banco de dados
+     * @throws EventNotFoundException quando o attendeeId do evento fornecido não foi encontrado no banco de dados
      * @throws EventFullException quando o participante não pode registrar-se no evento por já estar cheio
      */
     public AttendeeIdDTO registerAttendeeOnEvent(String eventId, AttendeeRequestDTO request){

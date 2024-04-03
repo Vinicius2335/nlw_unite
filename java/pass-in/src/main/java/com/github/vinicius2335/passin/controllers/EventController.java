@@ -1,5 +1,7 @@
 package com.github.vinicius2335.passin.controllers;
 
+import com.github.vinicius2335.passin.dto.attendee.AttendeeIdDTO;
+import com.github.vinicius2335.passin.dto.attendee.AttendeeRequestDTO;
 import com.github.vinicius2335.passin.dto.attendee.AttendeesListResponseDTO;
 import com.github.vinicius2335.passin.dto.event.EventIdDTO;
 import com.github.vinicius2335.passin.dto.event.EventRequestDTO;
@@ -33,7 +35,7 @@ public class EventController {
     /**
      * Endpoint responsável por criar um novo evento
      * @param requestDTO representa um evento com os campos necessários para a sua criação
-     * @return id do evento criado
+     * @return attendeeId do evento criado
      */
     @PostMapping
     public ResponseEntity<EventIdDTO> createEvent(
@@ -43,7 +45,8 @@ public class EventController {
         EventIdDTO eventIdDTO = eventService.createEvent(requestDTO);
 
         // UriComponentsBuilder -> o próprio spring injeta pra nós no método
-        URI uri = uriComponentsBuilder.path("/events/{id}").buildAndExpand(eventIdDTO.eventId()).toUri();
+        // seria a url onde podemos consultar o evento criado
+        URI uri = uriComponentsBuilder.path("/events/{attendeeId}").buildAndExpand(eventIdDTO.eventId()).toUri();
 
         return ResponseEntity
                 .created(uri)
@@ -62,6 +65,26 @@ public class EventController {
     @GetMapping("/attendees/{eventId}")
     public ResponseEntity<AttendeesListResponseDTO> getEventAttendee(@PathVariable String eventId){
         return ResponseEntity.ok(attendeeService.getEventsAttendee(eventId));
+    }
+
+    /**
+     * Endpoint responsável em registrar um participante num evento
+     * @param eventId Identificador do evento
+     * @param request Representa os dados necessários para registrar um novo participante
+     * @return attendeeId do participante registrado no evento
+     */
+    @PostMapping("/{eventId}/attendees")
+    public ResponseEntity<AttendeeIdDTO> registerAttendeeOnEvent(
+            @PathVariable String eventId,
+            @RequestBody AttendeeRequestDTO request,
+            UriComponentsBuilder uriBuilder
+    ){
+        AttendeeIdDTO response = eventService.registerAttendeeOnEvent(eventId, request);
+
+        return ResponseEntity
+                // url onde podemos consultar esse participante criado
+                .created(uriBuilder.path("/attendees/{attendeeId}/badge").buildAndExpand(response.attendeeId()).toUri())
+                .body(response);
     }
 
 }

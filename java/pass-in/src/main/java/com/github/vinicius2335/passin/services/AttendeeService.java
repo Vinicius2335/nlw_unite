@@ -26,15 +26,15 @@ public class AttendeeService {
     private final CheckInRepository checkInRepository;
 
     /**
-     * Retorna o participante encontrado pelo id
+     * Retorna o participante encontrado pelo attendeeId
      * @param attendeeId Identificador do participante
      * @return o participante encontrado
-     * @throws AttendeeNotFoundException quando o id de participante fornecido não foi encontrado no banco de dados
+     * @throws AttendeeNotFoundException quando o attendeeId de participante fornecido não foi encontrado no banco de dados
      */
     public Attendee getAttendeeByIdOrThrowsException(String attendeeId){
         // FIXME - ExceptionHandler
         return attendeeRepository.findById(attendeeId)
-                .orElseThrow(() -> new AttendeeNotFoundException("Attendee not found with id: " +attendeeId));
+                .orElseThrow(() -> new AttendeeNotFoundException("Attendee not found with attendeeId: " +attendeeId));
     }
 
     /**
@@ -99,7 +99,7 @@ public class AttendeeService {
      * @param attendeeId Identificador do participante
      * @param uriComponentsBuilder Usado para montar a url do check-in
      * @return crachá do participante
-     * @throws AttendeeNotFoundException quando o participante não foi encontrado pelo id
+     * @throws AttendeeNotFoundException quando o participante não foi encontrado pelo attendeeId
      */
     public AttendeeBadgeResponseDTO getAttendeeBadge(String attendeeId, UriComponentsBuilder uriComponentsBuilder){
         Attendee attendee = getAttendeeByIdOrThrowsException(attendeeId);
