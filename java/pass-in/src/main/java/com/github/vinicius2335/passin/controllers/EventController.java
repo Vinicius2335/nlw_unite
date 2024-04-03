@@ -27,7 +27,7 @@ public class EventController {
      */
     @GetMapping("/{eventId}")
     public ResponseEntity<EventResponseDTO> getEventDetail(@PathVariable String eventId){
-        return ResponseEntity.ok(eventService.getEventDetailOrThrowsException(eventId));
+        return ResponseEntity.ok(eventService.getEventDetail(eventId));
     }
 
     /**

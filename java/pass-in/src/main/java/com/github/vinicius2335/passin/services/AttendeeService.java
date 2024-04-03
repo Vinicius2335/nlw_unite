@@ -1,6 +1,7 @@
 package com.github.vinicius2335.passin.services;
 
 import com.github.vinicius2335.passin.domain.attendee.Attendee;
+import com.github.vinicius2335.passin.domain.attendee.exceptions.AttendeeAlreadyExistException;
 import com.github.vinicius2335.passin.domain.checkin.CheckIn;
 import com.github.vinicius2335.passin.dto.attendee.AttendeeDetail;
 import com.github.vinicius2335.passin.dto.attendee.AttendeesListResponseDTO;
@@ -50,4 +51,29 @@ public class AttendeeService {
 
         return new AttendeesListResponseDTO(attendeeDetailList);
     }
+
+    /**
+     * Registra um novo participante no banco de dados
+     * @param newAttendee participante à ser registrado
+     * @return participante registrado
+     */
+    public Attendee registerAttendee(Attendee newAttendee){
+        return attendeeRepository.save(newAttendee);
+    }
+
+    /**
+     * Verifica se o participante já está inscrito no evento
+     * @param email correio eletrônido do participante
+     * @param eventId identificador do evento
+     * @throws AttendeeAlreadyExistException quando o participante já está registrado no evento
+     */
+    public void verifyAttendeeSubscription(String email, String eventId) {
+        // FIXME - ExceptionHandler
+        Optional<Attendee> isAttendeeRegistered = attendeeRepository.findByEventIdAndEmail(eventId, email);
+
+        if (isAttendeeRegistered.isPresent()){
+            throw new AttendeeAlreadyExistException("Attendee is already registered");
+        }
+    }
+
 }
