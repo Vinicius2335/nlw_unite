@@ -2,14 +2,19 @@ package com.github.vinicius2335.passin.services;
 
 import com.github.vinicius2335.passin.domain.attendee.Attendee;
 import com.github.vinicius2335.passin.domain.attendee.exceptions.AttendeeAlreadyExistException;
+import com.github.vinicius2335.passin.domain.attendee.exceptions.AttendeeNotFoundException;
 import com.github.vinicius2335.passin.domain.checkin.CheckIn;
+import com.github.vinicius2335.passin.dto.attendee.AttendeeBadgeResponseDTO;
 import com.github.vinicius2335.passin.dto.attendee.AttendeeDetail;
 import com.github.vinicius2335.passin.dto.attendee.AttendeesListResponseDTO;
+import com.github.vinicius2335.passin.dto.attendee.AttendeeBadgeDTO;
 import com.github.vinicius2335.passin.repositories.AttendeeRepository;
 import com.github.vinicius2335.passin.repositories.CheckInRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +24,18 @@ import java.util.Optional;
 public class AttendeeService {
     private final AttendeeRepository attendeeRepository;
     private final CheckInRepository checkInRepository;
+
+    /**
+     * Retorna o participante encontrado pelo id
+     * @param attendeeId Identificador do participante
+     * @return o participante encontrado
+     * @throws AttendeeNotFoundException quando o id de participante fornecido não foi encontrado no banco de dados
+     */
+    public Attendee getAttendeeByIdOrThrowsException(String attendeeId){
+        // FIXME - ExceptionHandler
+        return attendeeRepository.findById(attendeeId)
+                .orElseThrow(() -> new AttendeeNotFoundException("Attendee not found with id: " +attendeeId));
+    }
 
     /**
      * Retorna todos os participantes  relacionado a um evento
@@ -74,6 +91,29 @@ public class AttendeeService {
         if (isAttendeeRegistered.isPresent()){
             throw new AttendeeAlreadyExistException("Attendee is already registered");
         }
+    }
+
+    /**
+     * Retorna o crachá do participante
+     *
+     * @param attendeeId Identificador do participante
+     * @param uriComponentsBuilder Usado para montar a url do check-in
+     * @return crachá do participante
+     * @throws AttendeeNotFoundException quando o participante não foi encontrado pelo id
+     */
+    public AttendeeBadgeResponseDTO getAttendeeBadge(String attendeeId, UriComponentsBuilder uriComponentsBuilder){
+        Attendee attendee = getAttendeeByIdOrThrowsException(attendeeId);
+
+        URI uri = uriComponentsBuilder.path("/attendees/{attendeeId}/check-in").buildAndExpand(attendeeId).toUri();
+
+        AttendeeBadgeDTO badge = new AttendeeBadgeDTO(
+                attendee.getName(),
+                attendee.getEmail(),
+                uri.toString(),
+                attendee.getEvent().getId()
+        );
+
+        return new AttendeeBadgeResponseDTO(badge);
     }
 
 }
