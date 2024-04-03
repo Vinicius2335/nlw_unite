@@ -7,9 +7,7 @@ import com.github.vinicius2335.passin.domain.event.exceptions.EventFullException
 import com.github.vinicius2335.passin.domain.event.exceptions.EventNotFoundException;
 import com.github.vinicius2335.passin.dto.attendee.AttendeeIdDTO;
 import com.github.vinicius2335.passin.dto.attendee.AttendeeRequestDTO;
-import com.github.vinicius2335.passin.dto.event.EventIdDTO;
-import com.github.vinicius2335.passin.dto.event.EventRequestDTO;
-import com.github.vinicius2335.passin.dto.event.EventResponseDTO;
+import com.github.vinicius2335.passin.dto.event.*;
 import com.github.vinicius2335.passin.repositories.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,11 +23,14 @@ public class EventService {
     private final AttendeeService attendeeService;
 
     /**
-     * Listagem de eventos existentes no banco de dados
-     * @return lista de eventos
+     * Listagem de todos os eventos existentes no banco de dados
+     * @return uma lista com todos os eventos do banco
      */
-    public List<Event> getAllEvent(){
-        return eventRepository.findAll();
+    public EventListResponseDTO getAllEvent(){
+        List<EventResponseDTO> eventResponses = eventRepository.findAll()
+                .stream().map(event -> getEventDetail(event.getId())).toList();
+
+        return new EventListResponseDTO(eventResponses);
     }
 
     /**
@@ -99,6 +100,7 @@ public class EventService {
      * @throws EventNotFoundException quando o attendeeId do evento fornecido não foi encontrado no banco de dados
      * @throws EventFullException quando o participante não pode registrar-se no evento por já estar cheio
      */
+    @Transactional
     public AttendeeIdDTO registerAttendeeOnEvent(String eventId, AttendeeRequestDTO request){
         attendeeService.verifyAttendeeSubscription(request.email(), eventId);
 

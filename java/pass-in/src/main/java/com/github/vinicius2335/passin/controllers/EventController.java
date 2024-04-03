@@ -4,6 +4,7 @@ import com.github.vinicius2335.passin.dto.attendee.AttendeeIdDTO;
 import com.github.vinicius2335.passin.dto.attendee.AttendeeRequestDTO;
 import com.github.vinicius2335.passin.dto.attendee.AttendeesListResponseDTO;
 import com.github.vinicius2335.passin.dto.event.EventIdDTO;
+import com.github.vinicius2335.passin.dto.event.EventListResponseDTO;
 import com.github.vinicius2335.passin.dto.event.EventRequestDTO;
 import com.github.vinicius2335.passin.dto.event.EventResponseDTO;
 import com.github.vinicius2335.passin.services.AttendeeService;
@@ -21,6 +22,14 @@ import java.net.URI;
 public class EventController {
     private final EventService eventService;
     private final AttendeeService attendeeService;
+
+    /**
+     * Endpont responsável por retornar todos os eventos
+     * @return todos os eventos registrados no banco
+     */
+    public ResponseEntity<EventListResponseDTO> getAllEvents(){
+        return ResponseEntity.ok(eventService.getAllEvent());
+    }
 
     /**
      * Endpoint responsável por retornar os detalhes de um evento
@@ -62,7 +71,7 @@ public class EventController {
      * @param eventId identificador do evento
      * @return resposta com alista de participantes do evento solicitado
      */
-    @GetMapping("/attendees/{eventId}")
+    @GetMapping("/{eventId}/attendees")
     public ResponseEntity<AttendeesListResponseDTO> getEventAttendee(@PathVariable String eventId){
         return ResponseEntity.ok(attendeeService.getEventsAttendee(eventId));
     }

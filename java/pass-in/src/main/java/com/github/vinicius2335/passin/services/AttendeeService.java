@@ -12,6 +12,7 @@ import com.github.vinicius2335.passin.repositories.AttendeeRepository;
 import com.github.vinicius2335.passin.repositories.CheckInRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -74,6 +75,7 @@ public class AttendeeService {
      * @param newAttendee participante à ser registrado
      * @return participante registrado
      */
+    @Transactional
     public Attendee registerAttendee(Attendee newAttendee){
         return attendeeRepository.save(newAttendee);
     }
