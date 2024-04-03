@@ -14,7 +14,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 public class AttendeeController {
     private final AttendeeService attendeeService;
-    private final CheckInService checkInService;
 
     /**
      * Endpoint responsável por obter o crachá de inscrição do participante
@@ -39,7 +38,7 @@ public class AttendeeController {
             @PathVariable String attendeeId,
             UriComponentsBuilder uriBuilder
     ){
-        CheckInIdResponseDTO response = checkInService.checkInAttendee(attendeeId);
+        CheckInIdResponseDTO response = attendeeService.registerCheckInAttendee(attendeeId);
 
         return ResponseEntity
                 .created(uriBuilder.path("/attendees/{attendeeId}/badge").buildAndExpand(attendeeId).toUri())

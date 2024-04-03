@@ -16,18 +16,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CheckInService {
     private final CheckInRepository checkInRepository;
-    private final AttendeeService attendeeService;
 
     /**
-     * Realiza o check-in do participante no evento
-     * @param attendeeId Identificador do participante
+     * Salva o check-in realizado pelo participante
+     * @param attendee participante que realizará o check-in
      * @return id do chec-in realizado
-     * @throws AttendeeNotFoundException quando o participante não for encontrado pelo id
      */
     @Transactional
-    public CheckInIdResponseDTO checkInAttendee(String attendeeId){
-        Attendee attendee = attendeeService.getAttendeeByIdOrThrowsException(attendeeId);
-        verifyCheckInExists(attendeeId);
+    public CheckInIdResponseDTO checkInAttendee(Attendee attendee){
+        verifyCheckInExists(attendee.getId());
 
         CheckIn checkIn = new CheckIn();
         checkIn.setAttendee(attendee);

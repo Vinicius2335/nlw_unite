@@ -8,6 +8,7 @@ import com.github.vinicius2335.passin.dto.attendee.AttendeeBadgeDTO;
 import com.github.vinicius2335.passin.dto.attendee.AttendeeBadgeResponseDTO;
 import com.github.vinicius2335.passin.dto.attendee.AttendeeDetail;
 import com.github.vinicius2335.passin.dto.attendee.AttendeesListResponseDTO;
+import com.github.vinicius2335.passin.dto.checkin.CheckInIdResponseDTO;
 import com.github.vinicius2335.passin.repositories.AttendeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -115,6 +116,20 @@ public class AttendeeService {
         );
 
         return new AttendeeBadgeResponseDTO(badge);
+    }
+
+    /**
+     * Realiza o check-in do participante no evento
+     *
+     * @param attendeeId Identificador do participante
+     * @return id do chec-in realizado
+     * @throws AttendeeNotFoundException quando o participante não for encontrado pelo id
+     */
+    @Transactional
+    public CheckInIdResponseDTO registerCheckInAttendee(String attendeeId){
+        Attendee attendee = getAttendeeByIdOrThrowsException(attendeeId);
+
+        return checkInService.checkInAttendee(attendee);
     }
 
 }
