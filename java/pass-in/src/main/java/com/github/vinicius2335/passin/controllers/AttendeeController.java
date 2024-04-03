@@ -1,13 +1,12 @@
 package com.github.vinicius2335.passin.controllers;
 
 import com.github.vinicius2335.passin.dto.attendee.AttendeeBadgeResponseDTO;
+import com.github.vinicius2335.passin.dto.checkin.CheckInIdResponseDTO;
 import com.github.vinicius2335.passin.services.AttendeeService;
+import com.github.vinicius2335.passin.services.CheckInService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
@@ -15,6 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 public class AttendeeController {
     private final AttendeeService attendeeService;
+    private final CheckInService checkInService;
 
     /**
      * Endpoint responsável por obter o crachá de inscrição do participante
@@ -27,5 +27,22 @@ public class AttendeeController {
             UriComponentsBuilder uriBuilder
     ){
       return ResponseEntity.ok(attendeeService.getAttendeeBadge(attendeeId, uriBuilder));
+    }
+
+    /**
+     * Endpoint responsável por realizar o chec-in do participante no evento
+     * @param attendeeId Identificador do participante
+     * @return id do check-in realizado
+     */
+    @PostMapping("/{attendeeId}/check-in")
+    public ResponseEntity<CheckInIdResponseDTO> checkInAttendee(
+            @PathVariable String attendeeId,
+            UriComponentsBuilder uriBuilder
+    ){
+        CheckInIdResponseDTO response = checkInService.checkInAttendee(attendeeId);
+
+        return ResponseEntity
+                .created(uriBuilder.path("/attendees/{attendeeId}/badge").buildAndExpand(attendeeId).toUri())
+                .body(response);
     }
 }

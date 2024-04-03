@@ -4,12 +4,11 @@ import com.github.vinicius2335.passin.domain.attendee.Attendee;
 import com.github.vinicius2335.passin.domain.attendee.exceptions.AttendeeAlreadyExistException;
 import com.github.vinicius2335.passin.domain.attendee.exceptions.AttendeeNotFoundException;
 import com.github.vinicius2335.passin.domain.checkin.CheckIn;
+import com.github.vinicius2335.passin.dto.attendee.AttendeeBadgeDTO;
 import com.github.vinicius2335.passin.dto.attendee.AttendeeBadgeResponseDTO;
 import com.github.vinicius2335.passin.dto.attendee.AttendeeDetail;
 import com.github.vinicius2335.passin.dto.attendee.AttendeesListResponseDTO;
-import com.github.vinicius2335.passin.dto.attendee.AttendeeBadgeDTO;
 import com.github.vinicius2335.passin.repositories.AttendeeRepository;
-import com.github.vinicius2335.passin.repositories.CheckInRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AttendeeService {
     private final AttendeeRepository attendeeRepository;
-    private final CheckInRepository checkInRepository;
+    private final CheckInService checkInService;
 
     /**
      * Retorna o participante encontrado pelo attendeeId
@@ -57,7 +56,7 @@ public class AttendeeService {
 
         List<AttendeeDetail> attendeeDetailList = attendeeList.stream()
                 .map(attendee -> {
-                    Optional<CheckIn> checkIn = checkInRepository.findByAttendeeId(attendee.getId());
+                    Optional<CheckIn> checkIn = checkInService.getOptionalCheckInByAttendeeId(attendee.getId());
 
                     OffsetDateTime checkedInAt = checkIn.isPresent() ? checkIn.get().getCreatedAt() : null;
 
