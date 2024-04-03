@@ -27,6 +27,7 @@ public class EventController {
      * Endpont responsável por retornar todos os eventos
      * @return todos os eventos registrados no banco
      */
+    @GetMapping
     public ResponseEntity<EventListResponseDTO> getAllEvents(){
         return ResponseEntity.ok(eventService.getAllEvent());
     }
