@@ -108,7 +108,6 @@ public class EventService {
         List<Attendee> attendeeList = attendeeService.getAllAttendeesFromEvent(eventId);
 
         if (event.getMaximunAttendees() <= attendeeList.size()){
-            //FIXME - ExceptionHandler
             throw new EventFullException("Event is full");
         }
 

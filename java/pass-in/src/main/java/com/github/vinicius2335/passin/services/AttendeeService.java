@@ -33,7 +33,6 @@ public class AttendeeService {
      * @throws AttendeeNotFoundException quando o attendeeId de participante fornecido não foi encontrado no banco de dados
      */
     public Attendee getAttendeeByIdOrThrowsException(String attendeeId){
-        // FIXME - ExceptionHandler
         return attendeeRepository.findById(attendeeId)
                 .orElseThrow(() -> new AttendeeNotFoundException("Attendee not found with attendeeId: " +attendeeId));
     }
@@ -87,7 +86,6 @@ public class AttendeeService {
      * @throws AttendeeAlreadyExistException quando o participante já está registrado no evento
      */
     public void verifyAttendeeSubscription(String email, String eventId) {
-        // FIXME - ExceptionHandler
         Optional<Attendee> isAttendeeRegistered = attendeeRepository.findByEventIdAndEmail(eventId, email);
 
         if (isAttendeeRegistered.isPresent()){

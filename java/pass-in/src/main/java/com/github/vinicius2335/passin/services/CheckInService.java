@@ -40,7 +40,6 @@ public class CheckInService {
      * @throws CheckInAlreadyExistsException quando o participante já realizou o check-in
      */
     private void verifyCheckInExists(String attendeeId){
-        // FIXME - ExceptionHandler
         Optional<CheckIn> isCheckIn = getOptionalCheckInByAttendeeId(attendeeId);
         if (isCheckIn.isPresent()){
             throw new CheckInAlreadyExistsException("Attendee already checked in");
