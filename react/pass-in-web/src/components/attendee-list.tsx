@@ -6,8 +6,7 @@ import {
   MoreHorizontal,
   Search
 } from "lucide-react"
-import { ChangeEvent, useState } from "react"
-import { attendees } from '../data/attendees'
+import { ChangeEvent, useEffect, useState } from "react"
 import { Attendee } from "../types/entities-types"
 import { dateFormat } from "../utils/date-format"
 import { IconButton } from "./icon-button"
@@ -19,28 +18,43 @@ import { TableRow } from "./table/table-row"
 export function AttendeeList() {
   const [searchInput, setSearchInput] = useState("")
   const [page, setPage] = useState(1)
+  const [attendees, setAttendees] = useState<Attendee[]>([])
 
   const totalPages = Math.ceil(attendees.length / 10)
 
-  function onSearchInputChanged(event: ChangeEvent<HTMLInputElement>){
+  // TODO - 31:26
+  function onSearchInputChanged(event: ChangeEvent<HTMLInputElement>) {
     setSearchInput(event.target.value)
+
+    const newAttendeeList : Attendee[] =  attendees.filter((attendee) => attendee.name === searchInput);
+    setAttendees(newAttendeeList)
+
   }
 
-  function goToNextPage(){
+  function goToNextPage() {
     setPage(page + 1)
   }
 
-  function goToPreviousPage(){
+  function goToPreviousPage() {
     setPage(page - 1)
   }
 
-  function goToLastPage(){
+  function goToLastPage() {
     setPage(totalPages)
   }
 
-  function goToFirstPage(){
+  function goToFirstPage() {
     setPage(1)
   }
+
+  useEffect(() => {
+    // http://localhost:8080/events/206a4d50-0d91-4c47-9ad2-18f634ccc517/attendees?page=${page - 1}
+    fetch("http://localhost:8080/events/206a4d50-0d91-4c47-9ad2-18f634ccc517/attendees")
+      .then(response => response.json())
+      .then(data => {
+        setAttendees(data.attendees)
+      })
+  }, [page])
 
   return (
     <div className="flex flex-col gap-4">
@@ -50,7 +64,7 @@ export function AttendeeList() {
         <div className="px-3 w-72 py-1.5 border border-white/10 rounded-lg text-sm flex items-center gap-3 outline-none">
           <Search className="size-4 text-emerald-300" />
           <input
-            className="bg-transparent flex-1 border-transparent"
+            className="bg-transparent flex-1 border-transparent focus:ring-0"
             placeholder="Buscar participante..."
             onChange={onSearchInputChanged}
           />
@@ -76,7 +90,7 @@ export function AttendeeList() {
         </thead>
 
         <tbody>
-          {attendees.slice((page - 1) * 10, page * 10).map((attendee : Attendee) => {
+          {attendees.slice((page - 1) * 10, page * 10).map((attendee: Attendee) => {
             return (
               <TableRow key={attendee.id}>
                 <TableCell>
@@ -93,7 +107,13 @@ export function AttendeeList() {
                   </div>
                 </TableCell>
                 <TableCell>{dateFormat(attendee.createdAt)}</TableCell>
-                <TableCell>{dateFormat(attendee.checkedInAt)}</TableCell>
+                <TableCell>
+                  {attendee.checkInAt === null ? (
+                    <span className="text-zinc-500">Não fez check-in</span>
+                  ) : (
+                    dateFormat(attendee.checkInAt)
+                  )}
+                </TableCell>
                 <TableCell>
                   <IconButton transparent>
                     <MoreHorizontal className="size-4" />
@@ -106,12 +126,12 @@ export function AttendeeList() {
 
         <tfoot>
           <tr>
-            <TableCell colSpan={3}>
-              Mostrando 10 de {attendees.length} itens
-            </TableCell>
+            <TableCell colSpan={3}>Mostrando 10 de {attendees.length} itens</TableCell>
             <TableCell colSpan={3}>
               <div className="flex items-center justify-end gap-8">
-                <span>Pagina {page} de {totalPages}</span>
+                <span>
+                  Pagina {page} de {totalPages}
+                </span>
 
                 <div className="flex gap-1.5">
                   <IconButton onClick={goToFirstPage} disabled={page === 1}>

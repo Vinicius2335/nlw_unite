@@ -5,6 +5,6 @@ import ptBR from "dayjs/locale/pt-br"
 dayjs.locale(ptBR)
 dayjs.extend(relativeTime)
 
-export function dateFormat(date: Date) {
+export function dateFormat(date: string) {
   return dayjs().to(date)
 }
