@@ -19,6 +19,7 @@ import java.net.URI;
 @RestController
 @RequestMapping("/events")
 @RequiredArgsConstructor
+@CrossOrigin(maxAge = 3600, origins = "*")
 public class EventController {
     private final EventService eventService;
     private final AttendeeService attendeeService;

@@ -12,6 +12,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RestController
 @RequestMapping("/attendees")
 @RequiredArgsConstructor
+@CrossOrigin(maxAge = 3600, origins = "*")
 public class AttendeeController {
     private final AttendeeService attendeeService;
 
