@@ -6,6 +6,11 @@ import {
   ChevronRight,
   ChevronsRight
 } from "lucide-react"
+import { IconButton } from "./icon-button"
+import { Table } from "./table/table"
+import { TableHeader } from "./table/table-header"
+import { TableCell } from "./table/table-cell"
+import { TableRow } from "./table/table-row"
 
 export function AttendeeList() {
   return (
@@ -23,82 +28,80 @@ export function AttendeeList() {
       </div>
 
       {/* não é possivel criar arredondamento em tabelas, precisamos criar uma div por volta da tabela */}
-      <div className="border border-white/10 rounded-lg">
-        <table className="w-full">
-          <thead>
-            <tr style={{ width: 48 }} className="border-b border-white/10">
-              <th className="py-3 px-4 text-sm font-semibold text-left">
-                <input
-                  type="checkbox"
-                  className="size-4 bg-black/20 rounded border border-white/10 text-orange-400 custom-checkbox"
-                />
-              </th>
-              <th className="py-3 px-4 text-sm font-semibold text-left">Código</th>
-              <th className="py-3 px-4 text-sm font-semibold text-left">Participante</th>
-              <th className="py-3 px-4 text-sm font-semibold text-left">Data de inscrição</th>
-              <th className="py-3 px-4 text-sm font-semibold text-left">Data de check-in</th>
-              <th style={{ width: 64 }} className="py-3 px-4 text-sm font-semibold text-left"></th>
-            </tr>
-          </thead>
+      <Table>
+        <thead>
+          <tr style={{ width: 48 }} className="border-b border-white/10">
+            <TableHeader>
+              <input
+                type="checkbox"
+                className="size-4 bg-black/20 rounded border border-white/10 text-orange-400 custom-checkbox"
+              />
+            </TableHeader>
+            <TableHeader>Código</TableHeader>
+            <TableHeader>Participante</TableHeader>
+            <TableHeader>Data de inscrição</TableHeader>
+            <TableHeader>Data de check-in</TableHeader>
+            <TableHeader style={{ width: 64 }}></TableHeader>
+          </tr>
+        </thead>
 
-          <tbody>
-            {Array.from({ length: 10 }).map((_, i) => {
-              return (
-                <tr className="border-b border-white/10 hover:bg-white/5" key={i}>
-                  <td className="py-3 px-4 text-sm text-zinc-300">
-                    <input
-                      type="checkbox"
-                      className="size-4 bg-black/20 rounded border border-white/10 text-orange-400 custom-checkbox"
-                    />
-                  </td>
-                  <td className="py-3 px-4 text-sm text-zinc-300">ajsdkasdlasjdl</td>
-                  <td className="py-3 px-4 text-sm text-zinc-300">
-                    <div className="flex flex-col gap-1">
-                      <span className="text-white font-semibold">Viniciusu Vieira</span>
-                      <span>vinicius@email.com</span>
-                    </div>
-                  </td>
-                  <td className="py-3 px-4 text-sm text-zinc-300">03/04/2023</td>
-                  <td className="py-3 px-4 text-sm text-zinc-300">03/04/2023</td>
-                  <td className="py-3 px-4 text-sm text-zinc-300">
-                    <button className="bg-black/20 border border-white/10 rounded-md p-1.5">
-                      <MoreHorizontal className="size-4" />
-                    </button>
-                  </td>
-                </tr>
-              )
-            })}
-          </tbody>
-
-          <tfoot>
-            <tr>
-              <td colSpan={3} className="py-3 px-4 text-sm text-zinc-300">
-                Mostrando 10 de 228 itens
-              </td>
-              <td colSpan={3} className="py-3 px-4 text-sm text-zinc-300 text-right">
-                <div className="flex items-center justify-end gap-8">
-                  <span>Pagina 1 de 23</span>
-
-                  <div className="flex gap-1.5">
-                    <button className="bg-white/10 border border-white/10 rounded-md p-1.5">
-                      <ChevronsLeft className="size-4" />
-                    </button>
-                    <button className="bg-white/10 border border-white/10 rounded-md p-1.5">
-                      <ChevronLeft className="size-4" />
-                    </button>
-                    <button className="bg-white/10 border border-white/10 rounded-md p-1.5">
-                      <ChevronRight className="size-4" />
-                    </button>
-                    <button className="bg-white/10 border border-white/10 rounded-md p-1.5">
-                      <ChevronsRight className="size-4" />
-                    </button>
+        <tbody>
+          {Array.from({ length: 10 }).map((_, i) => {
+            return (
+              <TableRow key={i}>
+                <TableCell>
+                  <input
+                    type="checkbox"
+                    className="size-4 bg-black/20 rounded border border-white/10 text-orange-400 custom-checkbox"
+                  />
+                </TableCell>
+                <TableCell>ajsdkasdlasjdl</TableCell>
+                <TableCell>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-white font-semibold">Viniciusu Vieira</span>
+                    <span>vinicius@email.com</span>
                   </div>
+                </TableCell>
+                <TableCell>03/04/2023</TableCell>
+                <TableCell>03/04/2023</TableCell>
+                <TableCell>
+                  <IconButton transparent>
+                    <MoreHorizontal className="size-4" />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            )
+          })}
+        </tbody>
+
+        <tfoot>
+          <tr>
+            <TableCell colSpan={3}>
+              Mostrando 10 de 228 itens
+            </TableCell>
+            <TableCell colSpan={3}>
+              <div className="flex items-center justify-end gap-8">
+                <span>Pagina 1 de 23</span>
+
+                <div className="flex gap-1.5">
+                  <IconButton>
+                    <ChevronsLeft className="size-4" />
+                  </IconButton>
+                  <IconButton>
+                    <ChevronLeft className="size-4" />
+                  </IconButton>
+                  <IconButton>
+                    <ChevronRight className="size-4" />
+                  </IconButton>
+                  <IconButton>
+                    <ChevronsRight className="size-4" />
+                  </IconButton>
                 </div>
-              </td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
+              </div>
+            </TableCell>
+          </tr>
+        </tfoot>
+      </Table>
     </div>
   )
 }
