@@ -85,7 +85,7 @@ public class EventController {
     public ResponseEntity<Map<String, Object>> getEventAttendee(
             @PathVariable String eventId,
             @RequestParam(required = false, defaultValue = "") String name,
-            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ){
         return ResponseEntity.ok(attendeeService.getEventsAttendee(eventId, name, pageable));
     }

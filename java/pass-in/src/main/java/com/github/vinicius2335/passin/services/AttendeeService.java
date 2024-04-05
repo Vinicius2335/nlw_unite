@@ -50,25 +50,6 @@ public class AttendeeService {
         return attendeeRepository.findByEventId(eventId);
     }
 
-
-    public AttendeesListResponseDTO getEventsAttendee(String eventId){
-        List<Attendee> attendeeList = getAllAttendeesFromEvent(eventId);
-
-        List<AttendeeDetail> attendeeDetailList = attendeeList.stream()
-                .map(attendee -> {
-                    Optional<CheckIn> checkIn = checkInService.getOptionalCheckInByAttendeeId(attendee.getId());
-
-                    OffsetDateTime checkedInAt = checkIn.isPresent() ? checkIn.get().getCreatedAt() : null;
-
-                    return new AttendeeDetail(
-                            attendee.getId(), attendee.getName(), attendee.getEmail(), attendee.getCreatedAt(),
-                            checkedInAt
-                    );
-                }).toList();
-
-        return new AttendeesListResponseDTO(attendeeDetailList);
-    }
-
     /**
      * Retorna todos os participantes de um determinado evento numa paginação.
      * Pode ser filtrado por nome, selecionar a página e o número de itens por página
@@ -94,7 +75,7 @@ public class AttendeeService {
         Map<String, Object> response = new HashMap<>();
         response.put("attendees", attendeeDetailList);
         response.put("currentPage", attendeePage.getNumber());
-        response.put("totalItems", attendeePage.getTotalElements());
+        response.put("totalItens", attendeePage.getTotalElements());
         response.put("totalPages", attendeePage.getTotalPages());
         response.put("currentItens", attendeeList.size());
 
