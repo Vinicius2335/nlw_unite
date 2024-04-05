@@ -8,6 +8,7 @@ import {
 } from "lucide-react"
 import { ChangeEvent, useEffect, useState } from "react"
 import { Attendee } from "../types/entities-types"
+import { AttendeesPaginationResponse } from "../types/responses-types"
 import { dateFormat } from "../utils/date-format"
 import { IconButton } from "./icon-button"
 import { Table } from "./table/table"
@@ -15,46 +16,92 @@ import { TableCell } from "./table/table-cell"
 import { TableHeader } from "./table/table-header"
 import { TableRow } from "./table/table-row"
 
+// URL State -> armazenar no endereço da url da aplicação, todo aquale estado que vem de um input do usuário
+// e que queremos persistir quando recarregar a página ou enviar o link para outra pessoa
+
 export function AttendeeList() {
-  const [searchInput, setSearchInput] = useState("")
-  const [page, setPage] = useState(1)
+  const [searchInput, setSearchInput] = useState(() => {
+    const url = new URL(window.location.toString())
+
+    if(url.searchParams.has('search')){
+      return url.searchParams.get('search') ?? ""
+    }
+
+    return ""
+  })
+
+  const [page, setPage] = useState(() => {
+    const url = new URL(window.location.toString())
+
+    if(url.searchParams.has('page')){
+      return Number(url.searchParams.get('page')) - 1
+    }
+
+    return 0
+  })
+
+  const [response, setResponse] = useState<AttendeesPaginationResponse>(
+    {} as AttendeesPaginationResponse
+  )
   const [attendees, setAttendees] = useState<Attendee[]>([])
 
-  const totalPages = Math.ceil(attendees.length / 10)
+  const totalPages = response.totalPages
+  const totalItens = response.totalItens
+  const currentPage = response.currentPage
+  const currentItens = response.currentItens
 
-  // TODO - 31:26
   function onSearchInputChanged(event: ChangeEvent<HTMLInputElement>) {
-    setSearchInput(event.target.value)
-
-    const newAttendeeList : Attendee[] =  attendees.filter((attendee) => attendee.name === searchInput);
-    setAttendees(newAttendeeList)
-
+    setCurrentSearch(event.target.value)
   }
 
   function goToNextPage() {
-    setPage(page + 1)
+    setCurrentPage(page + 1)
   }
 
   function goToPreviousPage() {
-    setPage(page - 1)
+    setCurrentPage(page - 1)
   }
 
   function goToLastPage() {
-    setPage(totalPages)
+    setCurrentPage(totalPages)
   }
 
   function goToFirstPage() {
-    setPage(1)
+    setCurrentPage(1)
+  }
+
+  function setCurrentPage(page: number){
+    // recarrega a pagina inteira ao mudar a url do navegador
+    // const searchParams = new URLSearchParams(window.location.search)
+    // searchParams.set("page", "1")
+    // window.location.search = searchParams.toString()
+
+    // somente muda a url do navegador, não recarrega a pagina inteira
+    const url = new URL(window.location.toString())
+    url.searchParams.set("page", String(page + 1))
+    window.history.pushState({}, "", url)
+    setPage(page)
+  }
+
+  function setCurrentSearch(search : string){
+    const url = new URL(window.location.toString())
+    url.searchParams.set("search", search)
+    window.history.pushState({}, "", url)
+    setSearchInput(search)
   }
 
   useEffect(() => {
-    // http://localhost:8080/events/206a4d50-0d91-4c47-9ad2-18f634ccc517/attendees?page=${page - 1}
-    fetch("http://localhost:8080/events/206a4d50-0d91-4c47-9ad2-18f634ccc517/attendees")
+    const url = new URL("http://localhost:8080/events/206a4d50-0d91-4c47-9ad2-18f634ccc517/attendees")
+    url.searchParams.set("name", searchInput)
+    url.searchParams.set("page", String(page))
+
+    fetch(url)
       .then(response => response.json())
-      .then(data => {
+      .then((data: AttendeesPaginationResponse) => {
         setAttendees(data.attendees)
+        setResponse(data)
       })
-  }, [page])
+  }, [page, searchInput])
 
   return (
     <div className="flex flex-col gap-4">
@@ -67,11 +114,11 @@ export function AttendeeList() {
             className="bg-transparent flex-1 border-transparent focus:ring-0"
             placeholder="Buscar participante..."
             onChange={onSearchInputChanged}
+            value={searchInput}
           />
         </div>
       </div>
 
-      {/* não é possivel criar arredondamento em tabelas, precisamos criar uma div por volta da tabela */}
       <Table>
         <thead>
           <tr style={{ width: 48 }} className="border-b border-white/10">
@@ -90,7 +137,7 @@ export function AttendeeList() {
         </thead>
 
         <tbody>
-          {attendees.slice((page - 1) * 10, page * 10).map((attendee: Attendee) => {
+          {attendees.map((attendee: Attendee) => {
             return (
               <TableRow key={attendee.id}>
                 <TableCell>
@@ -126,24 +173,26 @@ export function AttendeeList() {
 
         <tfoot>
           <tr>
-            <TableCell colSpan={3}>Mostrando 10 de {attendees.length} itens</TableCell>
+            <TableCell colSpan={3}>
+              Mostrando {currentItens} de {totalItens} itens
+            </TableCell>
             <TableCell colSpan={3}>
               <div className="flex items-center justify-end gap-8">
                 <span>
-                  Pagina {page} de {totalPages}
+                  Pagina {totalPages === 0 ? 0 : currentPage + 1} de {totalPages}
                 </span>
 
                 <div className="flex gap-1.5">
-                  <IconButton onClick={goToFirstPage} disabled={page === 1}>
+                  <IconButton onClick={goToFirstPage} disabled={page === 0}>
                     <ChevronsLeft className="size-4" />
                   </IconButton>
-                  <IconButton onClick={goToPreviousPage} disabled={page === 1}>
+                  <IconButton onClick={goToPreviousPage} disabled={page === 0}>
                     <ChevronLeft className="size-4" />
                   </IconButton>
-                  <IconButton onClick={goToNextPage} disabled={page === totalPages}>
+                  <IconButton onClick={goToNextPage} disabled={page === totalPages - 1}>
                     <ChevronRight className="size-4" />
                   </IconButton>
-                  <IconButton onClick={goToLastPage} disabled={page === totalPages}>
+                  <IconButton onClick={goToLastPage} disabled={page === totalPages - 1}>
                     <ChevronsRight className="size-4" />
                   </IconButton>
                 </div>
