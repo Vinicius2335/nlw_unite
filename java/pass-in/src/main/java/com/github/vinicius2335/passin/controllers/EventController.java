@@ -1,5 +1,6 @@
 package com.github.vinicius2335.passin.controllers;
 
+import com.github.vinicius2335.passin.dto.attendee.AttendeeDetail;
 import com.github.vinicius2335.passin.dto.attendee.AttendeeIdDTO;
 import com.github.vinicius2335.passin.dto.attendee.AttendeeRequestDTO;
 import com.github.vinicius2335.passin.dto.attendee.AttendeesListResponseDTO;
@@ -10,11 +11,16 @@ import com.github.vinicius2335.passin.dto.event.EventResponseDTO;
 import com.github.vinicius2335.passin.services.AttendeeService;
 import com.github.vinicius2335.passin.services.EventService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/events")
@@ -70,12 +76,18 @@ public class EventController {
 
     /**
      * Endpoint responsável por listar todos os participantes relacionados a um evento
-     * @param eventId identificador do evento
-     * @return resposta com alista de participantes do evento solicitado
+     * @param eventId Identificador do evento
+     * @param name nome desejado na busca
+     * @param pageable Objeto que representa a página ou o número de itens por página que deseja retornar da paginação
+     * @return Map que representa uma paginação contendo uma lista de AttendeeDetails
      */
     @GetMapping("/{eventId}/attendees")
-    public ResponseEntity<AttendeesListResponseDTO> getEventAttendee(@PathVariable String eventId){
-        return ResponseEntity.ok(attendeeService.getEventsAttendee(eventId));
+    public ResponseEntity<Map<String, Object>> getEventAttendee(
+            @PathVariable String eventId,
+            @RequestParam(required = false, defaultValue = "") String name,
+            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+    ){
+        return ResponseEntity.ok(attendeeService.getEventsAttendee(eventId, name, pageable));
     }
 
     /**

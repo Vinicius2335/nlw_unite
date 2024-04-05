@@ -11,13 +11,17 @@ import com.github.vinicius2335.passin.dto.attendee.AttendeesListResponseDTO;
 import com.github.vinicius2335.passin.dto.checkin.CheckInIdResponseDTO;
 import com.github.vinicius2335.passin.repositories.AttendeeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.time.OffsetDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -46,11 +50,7 @@ public class AttendeeService {
         return attendeeRepository.findByEventId(eventId);
     }
 
-    /**
-     * Retorna todos os participantes um determinado evento
-     * @param eventId identificador do evento
-     * @return lista com o DTO de todos os participantes
-     */
+
     public AttendeesListResponseDTO getEventsAttendee(String eventId){
         List<Attendee> attendeeList = getAllAttendeesFromEvent(eventId);
 
@@ -67,6 +67,38 @@ public class AttendeeService {
                 }).toList();
 
         return new AttendeesListResponseDTO(attendeeDetailList);
+    }
+
+    /**
+     * Retorna todos os participantes de um determinado evento numa paginação.
+     * Pode ser filtrado por nome, selecionar a página e o número de itens por página
+     * @param eventId identificador do evento
+     * @return Map que representa uma paginação contendo uma lista de AttendeeDetails
+     */
+    public Map<String, Object> getEventsAttendee(String eventId, String name, Pageable pageable){
+        Page<Attendee> attendeePage = attendeeRepository.findByEventIdAndNameContaining(eventId, name, pageable);
+        List<Attendee> attendeeList = attendeePage.getContent();
+
+        List<AttendeeDetail> attendeeDetailList = attendeeList.stream()
+                .map(attendee -> {
+                    Optional<CheckIn> checkIn = checkInService.getOptionalCheckInByAttendeeId(attendee.getId());
+
+                    OffsetDateTime checkedInAt = checkIn.isPresent() ? checkIn.get().getCreatedAt() : null;
+
+                    return new AttendeeDetail(
+                            attendee.getId(), attendee.getName(), attendee.getEmail(), attendee.getCreatedAt(),
+                            checkedInAt
+                    );
+                }).toList();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("attendees", attendeeDetailList);
+        response.put("currentPage", attendeePage.getNumber());
+        response.put("totalItems", attendeePage.getTotalElements());
+        response.put("totalPages", attendeePage.getTotalPages());
+        response.put("currentItens", attendeeList.size());
+
+        return response;
     }
 
     /**
