@@ -12,6 +12,8 @@
   - adicionar a tipagem para o tailwind
 - ``npx expo start --clear``
 - `` npx expo install expo-font @expo-google-fonts/roboto``
+- ``npx expo install expo-image-picker`` - permite o usuário selecionar imagens do próprio dispositivo
+- ``npx expo install react-native-svg react-native-qrcode-svg`` - para criar o qrcode
 
 # Notas
 
