@@ -123,7 +123,8 @@ public class AttendeeService {
                 attendee.getName(),
                 attendee.getEmail(),
                 uri.toString(),
-                attendee.getEvent().getId()
+                attendee.getEvent().getId(),
+                attendee.getEvent().getTitle()
         );
 
         return new AttendeeBadgeResponseDTO(badge);
