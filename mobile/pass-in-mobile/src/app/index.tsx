@@ -5,14 +5,28 @@ import { colors } from "@/styles/colors"
 import { Button } from "@/components/button"
 import { Link } from "expo-router"
 import { useState } from "react"
+import { api } from "@/server/api"
 
 export default function Home() {
   const [code, setCode] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
-  function onAccessCredential(){
-    if(!code.trim()){
-      return Alert.alert("Ingresso", "Informe o código do ingresso!")
+  async function onAccessCredential(){
+    try {
+      if(!code.trim()){
+        return Alert.alert("Ingresso", "Informe o código do ingresso!")
+      }
+
+      setIsLoading(true)
+
+      const { data } = await api.get(`/attendees/${code}/badge`)
+
+    } catch(error){
+      console.log(error)
+      setIsLoading(false)
+      Alert.alert("Ingresso", "Ingresso não encontrado")
     }
+    
   }
 
   return (
@@ -31,7 +45,7 @@ export default function Home() {
           <Input.Field placeholder="Código do ingresso" onChangeText={setCode}/>
         </Input>
 
-        <Button title="Acessar Credencial" onPress={onAccessCredential} />
+        <Button title="Acessar Credencial" onPress={onAccessCredential} isLoading={isLoading}/>
 
         <Link href={"/register"} className="text-gray-100 text-base fond-bold text-center mt-8">
           Ainda não possui ingresso?

@@ -14,6 +14,11 @@
 - `` npx expo install expo-font @expo-google-fonts/roboto``
 - ``npx expo install expo-image-picker`` - permite o usuário selecionar imagens do próprio dispositivo
 - ``npx expo install react-native-svg react-native-qrcode-svg`` - para criar o qrcode
+- ``npx expo install @react-native-async-storage/async-storage`` 
+  - permite salvar as informaçoes da credencial do usuário no dispositivo
+  - armazenamento baseado em chave e valor
+- ``npm install zustand`` 
+  - permite gerenciar estados globais da nossa aplicação de uma forma muito simples
 
 # Notas
 

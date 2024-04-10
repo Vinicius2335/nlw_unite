@@ -5,19 +5,54 @@ import { colors } from "@/styles/colors"
 import { Button } from "@/components/button"
 import { Link, router } from "expo-router"
 import { useState } from "react"
+import { api } from "@/server/api"
+import axios from "axios"
+
+// Não seria o ideal deixar de forma fixa 
+export const EVENT_ID = "206a4d50-0d91-4c47-9ad2-18f634ccc517"
 
 export default function Register() {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
+  async function onRegister(){
+    // Quando estamos usando dependências externas, utilizar try catch
+    try {
 
-  function onRegister(){
-    // NOTE : descomentar dps
-    // if(!name.trim() || !email.trim()){
-    //   return Alert.alert("Inscrição", "Informe seu nome e e-mail!")
-    // }
+    if(!name.trim() || !email.trim()){
+      return Alert.alert("Inscrição", "Informe seu nome e e-mail!")
+    }
 
-    router.push("/ticket")
+    setIsLoading(true)
+
+    const registerResponse = await api.post(`/events/${EVENT_ID}/attendees`, {name, email})
+
+    if(registerResponse.data.attendeeId){
+      // Depois que a inscrição ocorrer com sucesso
+      // O usuário pressior o botão de OK
+      // O usuário será redirecionado para ticket
+      Alert.alert("Inscrição", "Inscrição realizada com sucesso!", [
+        { text: "OK", onPress: () => router.push("/ticket") },
+      ])
+    }
+
+    } catch(error){
+      console.error(error)
+      setIsLoading(false)
+      
+      // Verifica se o erro é da requisição
+      if(axios.isAxiosError(error)){
+        // Ação para uma condição mais específica
+        // OBS: Tratar do mais específico para o mais genérico
+        if(String(error.response?.data.title).includes("already registered")){
+          return Alert.alert("Inscrição", "Este e-mail já está cadastrado!")
+        }
+      }
+
+      Alert.alert("Inscrição", "Não foi possível fazer a inscrição.")
+
+    }
   }
 
   return (
@@ -45,7 +80,7 @@ export default function Register() {
           <Input.Field placeholder="E-mail" keyboardType="email-address" onChangeText={setEmail}/>
         </Input>
 
-        <Button title="Realizar Inscrição" onPress={onRegister}/>
+        <Button title="Realizar Inscrição" onPress={onRegister} isLoading={isLoading}/>
 
         <Link href={"/"} className="text-gray-100 text-base fond-bold text-center mt-8">
           Já possui ingresso?
