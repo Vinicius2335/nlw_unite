@@ -1,9 +1,7 @@
 package com.github.vinicius2335.passin.controllers;
 
-import com.github.vinicius2335.passin.dto.attendee.AttendeeDetail;
 import com.github.vinicius2335.passin.dto.attendee.AttendeeIdDTO;
 import com.github.vinicius2335.passin.dto.attendee.AttendeeRequestDTO;
-import com.github.vinicius2335.passin.dto.attendee.AttendeesListResponseDTO;
 import com.github.vinicius2335.passin.dto.event.EventIdDTO;
 import com.github.vinicius2335.passin.dto.event.EventListResponseDTO;
 import com.github.vinicius2335.passin.dto.event.EventRequestDTO;
@@ -11,7 +9,6 @@ import com.github.vinicius2335.passin.dto.event.EventResponseDTO;
 import com.github.vinicius2335.passin.services.AttendeeService;
 import com.github.vinicius2335.passin.services.EventService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;

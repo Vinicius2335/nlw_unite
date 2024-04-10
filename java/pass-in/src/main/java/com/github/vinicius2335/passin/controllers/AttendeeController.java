@@ -3,7 +3,6 @@ package com.github.vinicius2335.passin.controllers;
 import com.github.vinicius2335.passin.dto.attendee.AttendeeBadgeResponseDTO;
 import com.github.vinicius2335.passin.dto.checkin.CheckInIdResponseDTO;
 import com.github.vinicius2335.passin.services.AttendeeService;
-import com.github.vinicius2335.passin.services.CheckInService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
