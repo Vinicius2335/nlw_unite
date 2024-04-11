@@ -7,6 +7,7 @@ import { Link, router } from "expo-router"
 import { useState } from "react"
 import { api } from "@/server/api"
 import axios from "axios"
+import { BadgeStore, useBadgeStore } from '../store/badge-store';
 
 // Não seria o ideal deixar de forma fixa 
 export const EVENT_ID = "206a4d50-0d91-4c47-9ad2-18f634ccc517"
@@ -15,6 +16,8 @@ export default function Register() {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+
+  const badgeStore = useBadgeStore()
 
   async function onRegister(){
     // Quando estamos usando dependências externas, utilizar try catch
@@ -29,6 +32,10 @@ export default function Register() {
     const registerResponse = await api.post(`/events/${EVENT_ID}/attendees`, {name, email})
 
     if(registerResponse.data.attendeeId){
+      const badgeResponse = await api.get(`/attendees/${registerResponse.data.attendeeId}/badge`)
+
+      badgeStore.save(badgeResponse.data.badge)
+
       // Depois que a inscrição ocorrer com sucesso
       // O usuário pressior o botão de OK
       // O usuário será redirecionado para ticket

@@ -19,6 +19,8 @@
   - armazenamento baseado em chave e valor
 - ``npm install zustand`` 
   - permite gerenciar estados globais da nossa aplicação de uma forma muito simples
+- ``npx expo install react-native-reanimated`` - animaçoes
+- ``npm i moti --legacy-peer-deps`` - possibilita a criação de animaçoes de forma declarativa atraves de propriedades
 
 # Notas
 
