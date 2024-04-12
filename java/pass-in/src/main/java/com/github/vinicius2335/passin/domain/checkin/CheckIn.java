@@ -21,7 +21,6 @@ public class CheckIn {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @CreationTimestamp
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
 

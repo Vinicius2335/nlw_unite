@@ -5,6 +5,7 @@ public record AttendeeBadgeDTO(
         String email,
         String checkInUrl,
         String eventId,
-        String eventTitle
+        String eventTitle,
+        Integer attendeeId
 ) {
 }

@@ -36,7 +36,7 @@ public class AttendeeService {
      * @return o participante encontrado
      * @throws AttendeeNotFoundException quando o attendeeId de participante fornecido não foi encontrado no banco de dados
      */
-    public Attendee getAttendeeByIdOrThrowsException(String attendeeId){
+    public Attendee getAttendeeByIdOrThrowsException(Integer attendeeId){
         return attendeeRepository.findById(attendeeId)
                 .orElseThrow(() -> new AttendeeNotFoundException("Attendee not found with attendeeId: " +attendeeId));
     }
@@ -114,7 +114,7 @@ public class AttendeeService {
      * @return crachá do participante
      * @throws AttendeeNotFoundException quando o participante não foi encontrado pelo attendeeId
      */
-    public AttendeeBadgeResponseDTO getAttendeeBadge(String attendeeId, UriComponentsBuilder uriComponentsBuilder){
+    public AttendeeBadgeResponseDTO getAttendeeBadge(Integer attendeeId, UriComponentsBuilder uriComponentsBuilder){
         Attendee attendee = getAttendeeByIdOrThrowsException(attendeeId);
 
         URI uri = uriComponentsBuilder.path("/attendees/{attendeeId}/check-in").buildAndExpand(attendeeId).toUri();
@@ -124,7 +124,8 @@ public class AttendeeService {
                 attendee.getEmail(),
                 uri.toString(),
                 attendee.getEvent().getId(),
-                attendee.getEvent().getTitle()
+                attendee.getEvent().getTitle(),
+                attendee.getId()
         );
 
         return new AttendeeBadgeResponseDTO(badge);
@@ -138,7 +139,7 @@ public class AttendeeService {
      * @throws AttendeeNotFoundException quando o participante não for encontrado pelo id
      */
     @Transactional
-    public CheckInIdResponseDTO registerCheckInAttendee(String attendeeId){
+    public CheckInIdResponseDTO registerCheckInAttendee(Integer attendeeId){
         Attendee attendee = getAttendeeByIdOrThrowsException(attendeeId);
 
         return checkInService.checkInAttendee(attendee);

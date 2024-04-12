@@ -22,7 +22,7 @@ public class AttendeeController {
      */
     @GetMapping("/{attendeeId}/badge")
     public ResponseEntity<AttendeeBadgeResponseDTO> getAttendeeBadge(
-            @PathVariable String attendeeId,
+            @PathVariable Integer attendeeId,
             UriComponentsBuilder uriBuilder
     ){
       return ResponseEntity.ok(attendeeService.getAttendeeBadge(attendeeId, uriBuilder));
@@ -35,7 +35,7 @@ public class AttendeeController {
      */
     @PostMapping("/{attendeeId}/check-in")
     public ResponseEntity<CheckInIdResponseDTO> checkInAttendee(
-            @PathVariable String attendeeId,
+            @PathVariable Integer attendeeId,
             UriComponentsBuilder uriBuilder
     ){
         CheckInIdResponseDTO response = attendeeService.registerCheckInAttendee(attendeeId);

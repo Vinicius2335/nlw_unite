@@ -1,7 +1,6 @@
 package com.github.vinicius2335.passin.services;
 
 import com.github.vinicius2335.passin.domain.attendee.Attendee;
-import com.github.vinicius2335.passin.domain.attendee.exceptions.AttendeeNotFoundException;
 import com.github.vinicius2335.passin.domain.checkin.CheckIn;
 import com.github.vinicius2335.passin.domain.checkin.exceptions.CheckInAlreadyExistsException;
 import com.github.vinicius2335.passin.dto.checkin.CheckInIdResponseDTO;
@@ -10,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.OffsetDateTime;
 import java.util.Optional;
 
 @Service
@@ -28,6 +28,7 @@ public class CheckInService {
 
         CheckIn checkIn = new CheckIn();
         checkIn.setAttendee(attendee);
+        checkIn.setCreatedAt(OffsetDateTime.now());
 
         checkInRepository.save(checkIn);
 
@@ -39,7 +40,7 @@ public class CheckInService {
      * @param attendeeId Identificador do participante
      * @throws CheckInAlreadyExistsException quando o participante já realizou o check-in
      */
-    private void verifyCheckInExists(String attendeeId){
+    private void verifyCheckInExists(Integer attendeeId){
         Optional<CheckIn> isCheckIn = getOptionalCheckInByAttendeeId(attendeeId);
         if (isCheckIn.isPresent()){
             throw new CheckInAlreadyExistsException("Attendee already checked in");
@@ -51,7 +52,7 @@ public class CheckInService {
      * @param attendeeId Identificador do participante
      * @return Optional de Check-In
      */
-    public Optional<CheckIn> getOptionalCheckInByAttendeeId(String attendeeId){
+    public Optional<CheckIn> getOptionalCheckInByAttendeeId(Integer attendeeId){
         return checkInRepository.findByAttendeeId(attendeeId);
     }
 }

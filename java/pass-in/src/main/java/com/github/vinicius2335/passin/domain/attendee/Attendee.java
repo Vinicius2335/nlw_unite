@@ -19,8 +19,9 @@ public class Attendee {
     @Id
     @Column(nullable = false)
     @EqualsAndHashCode.Include
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "attendee_seq")
+    @SequenceGenerator(name="attendee_seq", sequenceName = "SEQUENCE_ATTENDEES", initialValue=1001, allocationSize = 1)
+    private Integer id;
 
     @Column(nullable = false)
     private String name;
@@ -28,7 +29,6 @@ public class Attendee {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @CreationTimestamp
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
 
