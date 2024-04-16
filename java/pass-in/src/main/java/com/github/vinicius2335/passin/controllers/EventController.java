@@ -2,6 +2,7 @@ package com.github.vinicius2335.passin.controllers;
 
 import com.github.vinicius2335.passin.dto.attendee.AttendeeIdResponseDTO;
 import com.github.vinicius2335.passin.dto.attendee.AttendeeRequestDTO;
+import com.github.vinicius2335.passin.dto.attendee.PageAttendeesResponse;
 import com.github.vinicius2335.passin.dto.event.EventIdResponseDTO;
 import com.github.vinicius2335.passin.dto.event.EventListResponseDTO;
 import com.github.vinicius2335.passin.dto.event.EventRequestDTO;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/events")
@@ -75,13 +75,14 @@ public class EventController implements EventControllerOpenApi {
 
     /**
      * Endpoint responsável por listar todos os participantes relacionados a um evento
-     * @param eventId Identificador do evento
-     * @param name nome desejado na busca
+     *
+     * @param eventId  Identificador do evento
+     * @param name     nome desejado na busca
      * @param pageable Objeto que representa a página ou o número de itens por página que deseja retornar da paginação
-     * @return Map que representa uma paginação contendo uma lista de AttendeeDetails
+     * @return Objeto que representa uma paginação contendo uma lista de AttendeeDetails
      */
     @GetMapping("/{eventId}/attendees")
-    public ResponseEntity<Map<String, Object>> getEventAttendee(
+    public ResponseEntity<PageAttendeesResponse> getEventAttendee(
             @PathVariable String eventId,
             @RequestParam(required = false, defaultValue = "") String name,
             @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable

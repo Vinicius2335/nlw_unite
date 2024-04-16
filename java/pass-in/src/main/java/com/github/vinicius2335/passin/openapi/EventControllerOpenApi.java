@@ -2,6 +2,7 @@ package com.github.vinicius2335.passin.openapi;
 
 import com.github.vinicius2335.passin.dto.attendee.AttendeeIdResponseDTO;
 import com.github.vinicius2335.passin.dto.attendee.AttendeeRequestDTO;
+import com.github.vinicius2335.passin.dto.attendee.PageAttendeesResponse;
 import com.github.vinicius2335.passin.dto.event.EventIdResponseDTO;
 import com.github.vinicius2335.passin.dto.event.EventListResponseDTO;
 import com.github.vinicius2335.passin.dto.event.EventRequestDTO;
@@ -12,13 +13,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.Map;
 
 public interface EventControllerOpenApi {
     String UUID_EXAMPLE = "c471dc12-2ca6-40e1-85f7-fad1061feb98";
@@ -86,11 +84,11 @@ public interface EventControllerOpenApi {
                     responseCode = "200",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = PageAttendees.class)
+                            schema = @Schema(implementation = PageAttendeesResponse.class)
                     )
             )
     })
-    ResponseEntity<Map<String, Object>> getEventAttendee(
+    ResponseEntity<PageAttendeesResponse> getEventAttendee(
             @Parameter(description = "Id do evento selecionado", example = UUID_EXAMPLE, required = true) String eventId,
             @Parameter(description = "Nome do participante à ser filtrado se necessário", example = "Vini") String name,
             @Parameter(hidden = true) Pageable pageable
