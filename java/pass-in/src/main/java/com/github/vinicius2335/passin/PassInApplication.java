@@ -7,6 +7,7 @@ import com.github.vinicius2335.passin.domain.event.Event;
 import com.github.vinicius2335.passin.repositories.AttendeeRepository;
 import com.github.vinicius2335.passin.repositories.CheckInRepository;
 import com.github.vinicius2335.passin.repositories.EventRepository;
+import io.swagger.v3.oas.models.OpenAPI;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -39,6 +40,8 @@ public class PassInApplication {
 		newEvent.setSlug("unite-summit");
 		newEvent.setDetails("Um evento p/ devs apaixonados(as) por código!");
 		newEvent.setMaximunAttendees(120);
+
+		log.info("Swagger UI => http://localhost:8080/docs");
 
 		return args -> {
 			// verifica se já existe um evento registrado, se não, irá preencher as tabelas do banco com dados aleátorios

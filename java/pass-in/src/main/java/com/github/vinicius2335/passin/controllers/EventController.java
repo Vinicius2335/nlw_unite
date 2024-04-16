@@ -6,6 +6,7 @@ import com.github.vinicius2335.passin.dto.event.EventIdResponseDTO;
 import com.github.vinicius2335.passin.dto.event.EventListResponseDTO;
 import com.github.vinicius2335.passin.dto.event.EventRequestDTO;
 import com.github.vinicius2335.passin.dto.event.EventResponseDTO;
+import com.github.vinicius2335.passin.openapi.EventControllerOpenApi;
 import com.github.vinicius2335.passin.services.AttendeeService;
 import com.github.vinicius2335.passin.services.EventService;
 import jakarta.validation.Valid;
@@ -24,7 +25,7 @@ import java.util.Map;
 @RequestMapping("/events")
 @RequiredArgsConstructor
 @CrossOrigin(maxAge = 3600, origins = "*")
-public class EventController {
+public class EventController implements EventControllerOpenApi {
     private final EventService eventService;
     private final AttendeeService attendeeService;
 

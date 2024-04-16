@@ -2,6 +2,7 @@ package com.github.vinicius2335.passin.controllers;
 
 import com.github.vinicius2335.passin.dto.attendee.AttendeeBadgeResponseDTO;
 import com.github.vinicius2335.passin.dto.checkin.CheckInIdResponseDTO;
+import com.github.vinicius2335.passin.openapi.AttendeeControllerOpenApi;
 import com.github.vinicius2335.passin.services.AttendeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("/attendees")
 @RequiredArgsConstructor
 @CrossOrigin(maxAge = 3600, origins = "*")
-public class AttendeeController {
+public class AttendeeController implements AttendeeControllerOpenApi {
     private final AttendeeService attendeeService;
 
     /**
