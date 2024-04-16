@@ -5,7 +5,7 @@ import com.github.vinicius2335.passin.domain.attendee.exceptions.AttendeeAlready
 import com.github.vinicius2335.passin.domain.event.Event;
 import com.github.vinicius2335.passin.domain.event.exceptions.EventFullException;
 import com.github.vinicius2335.passin.domain.event.exceptions.EventNotFoundException;
-import com.github.vinicius2335.passin.dto.attendee.AttendeeIdDTO;
+import com.github.vinicius2335.passin.dto.attendee.AttendeeIdResponseDTO;
 import com.github.vinicius2335.passin.dto.attendee.AttendeeRequestDTO;
 import com.github.vinicius2335.passin.dto.event.*;
 import com.github.vinicius2335.passin.repositories.EventRepository;
@@ -64,7 +64,7 @@ public class EventService {
      * @return attendeeId do evento criado
      */
     @Transactional
-    public EventIdDTO createEvent(EventRequestDTO request){
+    public EventIdResponseDTO createEvent(EventRequestDTO request){
         Event newEvent = new Event();
         newEvent.setTitle(request.title());
         newEvent.setDetails(request.details());
@@ -72,7 +72,7 @@ public class EventService {
         newEvent.setSlug(createSlug(request.title()));
 
         eventRepository.save(newEvent);
-        return new EventIdDTO(newEvent.getId());
+        return new EventIdResponseDTO(newEvent.getId());
     }
 
     /**
@@ -102,7 +102,7 @@ public class EventService {
      * @throws EventFullException quando o participante não pode registrar-se no evento por já estar cheio
      */
     @Transactional
-    public AttendeeIdDTO registerAttendeeOnEvent(String eventId, AttendeeRequestDTO request){
+    public AttendeeIdResponseDTO registerAttendeeOnEvent(String eventId, AttendeeRequestDTO request){
         attendeeService.verifyAttendeeSubscription(request.email(), eventId);
 
         Event event = getEventByIdOrThrowsException(eventId);
@@ -120,6 +120,6 @@ public class EventService {
 
         attendeeService.registerAttendee(attendee);
 
-        return new AttendeeIdDTO(attendee.getId());
+        return new AttendeeIdResponseDTO(attendee.getId());
     }
 }

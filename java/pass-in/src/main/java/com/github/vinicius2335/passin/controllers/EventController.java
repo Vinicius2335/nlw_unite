@@ -1,13 +1,14 @@
 package com.github.vinicius2335.passin.controllers;
 
-import com.github.vinicius2335.passin.dto.attendee.AttendeeIdDTO;
+import com.github.vinicius2335.passin.dto.attendee.AttendeeIdResponseDTO;
 import com.github.vinicius2335.passin.dto.attendee.AttendeeRequestDTO;
-import com.github.vinicius2335.passin.dto.event.EventIdDTO;
+import com.github.vinicius2335.passin.dto.event.EventIdResponseDTO;
 import com.github.vinicius2335.passin.dto.event.EventListResponseDTO;
 import com.github.vinicius2335.passin.dto.event.EventRequestDTO;
 import com.github.vinicius2335.passin.dto.event.EventResponseDTO;
 import com.github.vinicius2335.passin.services.AttendeeService;
 import com.github.vinicius2335.passin.services.EventService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -52,19 +53,19 @@ public class EventController {
      * @return attendeeId do evento criado
      */
     @PostMapping
-    public ResponseEntity<EventIdDTO> createEvent(
-            @RequestBody EventRequestDTO requestDTO,
+    public ResponseEntity<EventIdResponseDTO> createEvent(
+            @RequestBody @Valid EventRequestDTO requestDTO,
             UriComponentsBuilder uriComponentsBuilder
     ){
-        EventIdDTO eventIdDTO = eventService.createEvent(requestDTO);
+        EventIdResponseDTO eventIdResponseDTO = eventService.createEvent(requestDTO);
 
         // UriComponentsBuilder -> o próprio spring injeta pra nós no método
         // seria a url onde podemos consultar o evento criado
-        URI uri = uriComponentsBuilder.path("/events/{attendeeId}").buildAndExpand(eventIdDTO.eventId()).toUri();
+        URI uri = uriComponentsBuilder.path("/events/{attendeeId}").buildAndExpand(eventIdResponseDTO.eventId()).toUri();
 
         return ResponseEntity
                 .created(uri)
-                .body(eventIdDTO);
+                .body(eventIdResponseDTO);
 
         //return ResponseEntity
         //        .status(HttpStatus.CREATED)
@@ -94,12 +95,12 @@ public class EventController {
      * @return attendeeId do participante registrado no evento
      */
     @PostMapping("/{eventId}/attendees")
-    public ResponseEntity<AttendeeIdDTO> registerAttendeeOnEvent(
+    public ResponseEntity<AttendeeIdResponseDTO> registerAttendeeOnEvent(
             @PathVariable String eventId,
-            @RequestBody AttendeeRequestDTO request,
+            @RequestBody @Valid AttendeeRequestDTO request,
             UriComponentsBuilder uriBuilder
     ){
-        AttendeeIdDTO response = eventService.registerAttendeeOnEvent(eventId, request);
+        AttendeeIdResponseDTO response = eventService.registerAttendeeOnEvent(eventId, request);
 
         return ResponseEntity
                 // url onde podemos consultar esse participante criado
