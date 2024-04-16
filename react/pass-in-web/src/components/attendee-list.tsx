@@ -52,6 +52,7 @@ export function AttendeeList() {
 
   function onSearchInputChanged(event: ChangeEvent<HTMLInputElement>) {
     setCurrentSearch(event.target.value)
+    setPage(0)
   }
 
   function goToNextPage() {
@@ -63,11 +64,11 @@ export function AttendeeList() {
   }
 
   function goToLastPage() {
-    setCurrentPage(totalPages)
+    setCurrentPage(totalPages - 1)
   }
 
   function goToFirstPage() {
-    setCurrentPage(1)
+    setCurrentPage(0)
   }
 
   function setCurrentPage(page: number){
@@ -91,7 +92,7 @@ export function AttendeeList() {
   }
 
   useEffect(() => {
-    const url = new URL("http://localhost:8080/events/206a4d50-0d91-4c47-9ad2-18f634ccc517/attendees")
+    const url = new URL("http://localhost:8080/events/058423d2-6a2f-4cf5-bf5d-d3dc040c23b4/attendees")
     url.searchParams.set("name", searchInput)
     url.searchParams.set("page", String(page))
 
