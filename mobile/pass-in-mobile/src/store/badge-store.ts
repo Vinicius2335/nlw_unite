@@ -13,7 +13,7 @@ export interface BadgeStore {
 	checkInUrl: string;
 	eventId: string;
 	eventTitle: string;
-  attendeeId: string;
+  attendeeId: number;
   image?: string
 }
 

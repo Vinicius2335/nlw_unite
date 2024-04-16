@@ -9,8 +9,7 @@ import { api } from "@/server/api"
 import { useBadgeStore } from "@/store/badge-store"
 
 export default function Home() {
-  // NOTE : MUDAR O ESTADO INICAL PARA ""
-  const [code, setCode] = useState("00ea211a-9d64-4206-95ef-b2d3105cb5cc")
+  const [code, setCode] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
   const badgeStore = useBadgeStore()
@@ -58,7 +57,6 @@ export default function Home() {
           <Input.Field
             placeholder="Código do ingresso"
             onChangeText={setCode}
-            value={code} // NOTE : REMOVER DEPOIS
           />
         </Input>
 

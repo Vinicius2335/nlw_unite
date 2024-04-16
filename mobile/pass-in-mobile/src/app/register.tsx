@@ -10,7 +10,7 @@ import axios from "axios"
 import { BadgeStore, useBadgeStore } from '../store/badge-store';
 
 // Não seria o ideal deixar de forma fixa 
-export const EVENT_ID = "206a4d50-0d91-4c47-9ad2-18f634ccc517"
+export const EVENT_ID = "058423d2-6a2f-4cf5-bf5d-d3dc040c23b4"
 
 export default function Register() {
   const [name, setName] = useState("")
@@ -45,7 +45,7 @@ export default function Register() {
     }
 
     } catch(error){
-      console.error(error)
+      console.log(error)
       setIsLoading(false)
       
       // Verifica se o erro é da requisição
