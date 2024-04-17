@@ -13,6 +13,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -28,6 +29,7 @@ public class PassInApplication {
 	}
 
 	@Bean
+	@Profile("!test") // faz com que o método seja executado sempre que o profile ativado n seja o de test
 	CommandLineRunner seedDatabase(
 			EventRepository eventRepository,
 			AttendeeRepository attendeeRepository,
