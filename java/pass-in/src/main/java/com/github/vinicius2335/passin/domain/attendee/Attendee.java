@@ -3,7 +3,6 @@ package com.github.vinicius2335.passin.domain.attendee;
 import com.github.vinicius2335.passin.domain.event.Event;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.OffsetDateTime;
 
