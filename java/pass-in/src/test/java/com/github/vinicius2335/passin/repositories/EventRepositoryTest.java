@@ -16,6 +16,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @DataJpaTest
 @ActiveProfiles("test")
+@DisplayName("Unit testing for event repository")
 class EventRepositoryTest {
     @Autowired
     private EventRepository undertest;
