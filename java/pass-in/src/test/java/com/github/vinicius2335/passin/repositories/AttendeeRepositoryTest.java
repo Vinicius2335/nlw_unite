@@ -167,4 +167,36 @@ class AttendeeRepositoryTest {
                         .isEmpty();
         softly.assertAll();
     }
+
+    @Test
+    @DisplayName("findById() return Optional Attendee find by id")
+    void givenAttendeeId_whenFindById_thenReturnOptionalAttendee(){
+        Attendee attendeeSaved = initDataBase();
+        // given
+        Integer attendeeId = attendeeSaved.getId();
+        // when
+        Optional<Attendee> expected = undertest.findById(attendeeId);
+        // then
+        assertThat(expected)
+                .isNotNull()
+                .isPresent()
+                .hasValueSatisfying(
+                        attendee1 ->
+                                assertThat(attendee1)
+                                        .usingRecursiveComparison()
+                                        .isEqualTo(attendeeSaved)
+                );
+    }
+
+    @Test
+    @DisplayName("findById() return empty Optional Attendee when attendee not found by id")
+    void givenAttendeeId_whenFindById_thenReturnEmptyOptionalAttendee(){
+        // given
+        Integer attendeeId = attendee.getId();
+        // when
+        Optional<Attendee> expected = undertest.findById(attendeeId);
+        // then
+        assertThat(expected)
+                .isEmpty();
+    }
 }

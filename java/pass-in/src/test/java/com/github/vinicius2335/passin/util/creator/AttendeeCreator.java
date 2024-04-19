@@ -16,6 +16,7 @@ public final class AttendeeCreator {
 
     public static Attendee mockAttendee(Event event){
         Attendee newAttendee = new Attendee();
+        newAttendee.setId(1001);
         newAttendee.setName(FAKER.name().fullName());
         newAttendee.setEmail(FAKER.internet().emailAddress());
         newAttendee.setCreatedAt(OffsetDateTime.now());
