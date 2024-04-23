@@ -71,8 +71,8 @@ public class EventService {
         newEvent.setMaximunAttendees(request.maximunAttendees());
         newEvent.setSlug(createSlug(request.title()));
 
-        eventRepository.save(newEvent);
-        return new EventIdResponseDTO(newEvent.getId());
+        Event eventSaved = eventRepository.save(newEvent);
+        return new EventIdResponseDTO(eventSaved.getId());
     }
 
     /**
@@ -103,10 +103,10 @@ public class EventService {
      */
     @Transactional
     public AttendeeIdResponseDTO registerAttendeeOnEvent(String eventId, AttendeeRequestDTO request){
-        attendeeService.verifyAttendeeSubscription(request.email(), eventId);
-
         Event event = getEventByIdOrThrowsException(eventId);
-        List<Attendee> attendeeList = attendeeService.getAllAttendeesFromEvent(eventId);
+        attendeeService.verifyAttendeeSubscription(request.email(), event.getId());
+
+        List<Attendee> attendeeList = attendeeService.getAllAttendeesFromEvent(event.getId());
 
         if (event.getMaximunAttendees() <= attendeeList.size()){
             throw new EventFullException("Event is full");
@@ -118,8 +118,7 @@ public class EventService {
         attendee.setEvent(event);
         attendee.setCreatedAt(OffsetDateTime.now());
 
-        attendeeService.registerAttendee(attendee);
-
-        return new AttendeeIdResponseDTO(attendee.getId());
+        Attendee attendeeRegistered = attendeeService.registerAttendee(attendee);
+        return new AttendeeIdResponseDTO(attendeeRegistered.getId());
     }
 }

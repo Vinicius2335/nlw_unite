@@ -7,6 +7,7 @@ import com.github.vinicius2335.passin.domain.event.Event;
 import com.github.vinicius2335.passin.dto.attendee.AttendeeBadgeDTO;
 import com.github.vinicius2335.passin.dto.attendee.AttendeeBadgeResponseDTO;
 import com.github.vinicius2335.passin.dto.attendee.AttendeeDetail;
+import com.github.vinicius2335.passin.dto.attendee.AttendeeRequestDTO;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -53,6 +54,13 @@ public final class AttendeeCreator {
                         attendee.getEvent().getTitle(),
                         attendee.getId()
                 )
+        );
+    }
+
+    public static AttendeeRequestDTO mockAttendeeRequestDTO(Attendee attendee){
+        return new AttendeeRequestDTO(
+                attendee.getName(),
+                attendee.getEmail()
         );
     }
 }

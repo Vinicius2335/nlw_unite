@@ -1,6 +1,11 @@
 package com.github.vinicius2335.passin.util.creator;
 
 import com.github.vinicius2335.passin.domain.event.Event;
+import com.github.vinicius2335.passin.dto.event.EventListResponseDTO;
+import com.github.vinicius2335.passin.dto.event.EventRequestDTO;
+import com.github.vinicius2335.passin.dto.event.EventResponseDTO;
+
+import java.util.List;
 
 public final class EventCreator {
     private EventCreator() {
@@ -16,5 +21,26 @@ public final class EventCreator {
         newEvent.setMaximunAttendees(120);
 
         return newEvent;
+    }
+
+    public static EventResponseDTO mockEventResponseDTO(Event event){
+        return new EventResponseDTO(
+          event,
+          1
+        );
+    }
+
+    public static EventListResponseDTO mockEventListResponseDTO(Event event) {
+        return new EventListResponseDTO(
+                List.of(mockEventResponseDTO(event))
+        );
+    }
+
+    public static EventRequestDTO mockEventRequest(Event event){
+        return new EventRequestDTO(
+                event.getTitle(),
+                event.getDetails(),
+                event.getMaximunAttendees()
+        );
     }
 }
