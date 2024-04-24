@@ -43,4 +43,8 @@ public final class EventCreator {
                 event.getMaximunAttendees()
         );
     }
+
+    public static EventRequestDTO mockInvalidEventRequest(){
+        return new EventRequestDTO("", "", -1);
+    }
 }

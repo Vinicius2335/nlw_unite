@@ -6,6 +6,7 @@ import com.github.vinicius2335.passin.domain.checkin.exceptions.CheckInAlreadyEx
 import com.github.vinicius2335.passin.domain.event.exceptions.EventFullException;
 import com.github.vinicius2335.passin.domain.event.exceptions.EventNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.*;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -44,7 +45,7 @@ public class ExceptionEntityHandler extends ResponseEntityExceptionHandler {
             WebRequest request
     ) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(status);
-        problemDetail.setTitle("Um ou mais campos estão inválidos");
+        problemDetail.setTitle("One or more fields are invalid");
 
         Map<String, String> fields = ex.getFieldErrors().stream()
                 .collect(Collectors.toMap(
@@ -76,6 +77,14 @@ public class ExceptionEntityHandler extends ResponseEntityExceptionHandler {
     public ProblemDetail handleCheckInAlreadyExists(CheckInAlreadyExistsException ex){
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.CONFLICT);
         problemDetail.setTitle(ex.getMessage());
+
+        return problemDetail;
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ProblemDetail handleDataIntegrityViolation(DataIntegrityViolationException ex){
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problemDetail.setTitle("Some field of the request has a resource in use");
 
         return problemDetail;
     }

@@ -63,4 +63,11 @@ public final class AttendeeCreator {
                 attendee.getEmail()
         );
     }
+
+    public static AttendeeRequestDTO mockInvalidAttendeeRequestDTO(){
+        return new AttendeeRequestDTO(
+                "",
+                ""
+        );
+    }
 }
