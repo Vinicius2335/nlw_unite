@@ -30,9 +30,8 @@ public class CheckInService {
         checkIn.setAttendee(attendee);
         checkIn.setCreatedAt(OffsetDateTime.now());
 
-        checkInRepository.save(checkIn);
-
-        return new CheckInIdResponseDTO(checkIn.getId());
+        CheckIn checkInSaved = checkInRepository.save(checkIn);
+        return new CheckInIdResponseDTO(checkInSaved.getId());
     }
 
     /**
