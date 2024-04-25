@@ -33,8 +33,7 @@ class AttendeeRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        event = EventCreator.mockEvent();
-        eventRepository.save(event);
+        event = eventRepository.save(EventCreator.mockEvent());
         attendee = AttendeeCreator.mockAttendee(event);
     }
 

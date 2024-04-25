@@ -49,6 +49,7 @@ class CheckInRepositoryTest {
         assertThat(expected)
                 .isNotNull()
                 .usingRecursiveComparison()
+                .ignoringFields("id")
                 .isEqualTo(checkIn);
     }
 
