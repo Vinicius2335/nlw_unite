@@ -61,8 +61,7 @@ class EventControllerIT extends BaseIT {
                 .get("/{eventId}")
         .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("events", Matchers.hasSize(1))
-                .body("events[0].event.title", Matchers.equalTo(event.getTitle()))
+                .body("event.title", Matchers.equalTo(event.getTitle()))
                 .log().all();
     }
 

@@ -30,7 +30,7 @@ public class AttendeeController implements AttendeeControllerOpenApi {
     }
 
     /**
-     * Endpoint responsável por realizar o chec-in do participante no evento
+     * Endpoint responsável por realizar o check-in do participante no evento
      * @param attendeeId Identificador do participante
      * @return id do check-in realizado
      */

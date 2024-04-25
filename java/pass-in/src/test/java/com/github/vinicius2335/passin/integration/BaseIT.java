@@ -10,7 +10,6 @@ import com.github.vinicius2335.passin.util.creator.AttendeeCreator;
 import com.github.vinicius2335.passin.util.creator.CheckInCreator;
 import com.github.vinicius2335.passin.util.creator.EventCreator;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
